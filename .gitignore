@@ -1,0 +1,14 @@
+# Python önbellek dosyaları
+__pycache__/
+*.pyc
+
+# Mac sistem dosyaları (Eğer Mac kullanıyorsan oluşur)
+.DS_Store
+
+# Sanal ortam klasörleri (Varsa)
+venv/
+env/
+.env
+
+# Streamlit gizli dosyaları
+.streamlit/secrets.toml

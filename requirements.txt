@@ -1,0 +1,6 @@
+streamlit
+openai
+pypdf
+requests
+beautifulsoup4
+urllib3
