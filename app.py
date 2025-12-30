@@ -22,8 +22,8 @@ load_dotenv()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # --- ANAHTARLAR ---
-DEEPSEEK_API_KEY = "sk-4109a78af41142d2b7a0d89427d0ca97" 
-GOOGLE_API_KEY = "AIzaSyDCDd5-p94w0cYiLrEjuZ3YJmEGuX6aJOc" 
+DEEPSEEK_API_KEY = "DEEPSEEK_API_KEY" 
+GOOGLE_API_KEY = "GOOGLE_API_KEY" 
 
 # 1. DeepSeek Ayarı (BEYİN)
 if not DEEPSEEK_API_KEY or "BURAYA" in DEEPSEEK_API_KEY: 

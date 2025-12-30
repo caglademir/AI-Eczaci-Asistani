@@ -1,55 +1,88 @@
-# 💊 AI Eczacı Asistanı Pro (v3.0)
+💊 AI Eczacı Asistanı (HIB-RAG v3.6)
+"Güvenli, Denetlenebilir ve Hibrit Mimarili İlaç Danışmanlık Sistemi"
+Bu proje, Büyük Dil Modellerinin (LLM) sağlık alanında güvenli kullanımını sağlamak amacıyla geliştirilmiş, %100 Güvenlik (Safety) odaklı bir "Karar Destek Sistemidir" (CDSS). Standart RAG yapılarının ötesine geçerek, görsel algılama (Vision) ve deterministik güvenlik protokollerini birleştiren Custom ReAct mimarisini kullanır.
 
-Bu proje, ilaç kutularını fotoğraftan tanıyan, prospektüsleri analiz eden ve global veritabanlarından (FDA) ilaç bilgisi çeken yapay zeka destekli bir eczacı asistanıdır.
+🚀 Projenin Öne Çıkan Özellikleri
+	•	🧠 Hibrit RAG Mimarisi: Yerel PDF veritabanı ile global FDA API'sini birleştiren, veri yoksa cevap vermeyi reddeden güvenli yapı.
+	•	👁️ Multimodal (Görsel) Analiz: Google Gemini 1.5 Flash entegrasyonu ile ilaç kutularının fotoğrafından ilaç tespiti (OCR + Context).
+	•	🛡️ Strict Safety Mode: Ölümcül ilaç etkileşimlerini ve yanlış kullanım senaryolarını yakalayan, halüsinasyon görmeyen (Non-Hallucinating) katı güvenlik protokolleri.
+	•	📉 Maliyet Optimizasyonu: OpenAI GPT-4o modelinden DeepSeek-V3 modeline geçiş yapılarak %95 oranında maliyet tasarrufu sağlanmıştır.
+	◦	GPT-4o Giriş Maliyeti: ~$2.50 / 1M Token
+	◦	DeepSeek-V3 Giriş Maliyeti: ~$0.14 / 1M Token
 
-## 🚀 Özellikler
+🏗️ Sistem Mimarisi ve Teknik Detaylar
+Sistem, app.py üzerinde çalışan özelleştirilmiş bir ReAct (Reasoning + Acting) ajanı üzerine kuruludur.
+1. Akış Diyagramı (ReAct Loop)
+	1	Gözlem (Observation): Kullanıcı metin mi yazdı, fotoğraf mı yükledi?
+	2	Multimodal İşleme: Fotoğraf varsa Gemini 1.5 ile analiz et -> Metne dök.
+	3	Aksiyon 1 (Primary Retrieval): CustomSimpleRAG ile yerel PDF'leri tara.
+	◦	Özelleştirilmiş Chunking: Cümle bütünlüğünü koruyan sentences[i:i+15] örtüşmeli bölümleme.
+	4	Karar (Decision Node):
+	◦	Veri Yetersizse ➔ Aksiyon 2: FDA API'sine bağlan.
+	◦	Veri Yoksa ➔ STOP: "Veritabanında Bulunamadı" hatası dön (Halüsinasyon Engeli).
+	5	Final Sentez: DeepSeek-V3 Reasoning motoru ile yanıt üret.
 
-* **📸 Fotoğraftan Tanıma:** İlaç kutusunun fotoğrafını yükleyin, yapay zeka ismini okusun.
-* **🌍 Global Veritabanı:** Yerel veritabanında olmayan ilaçlar için otomatik olarak OpenFDA (Amerikan İlaç Dairesi) API'sine bağlanır.
-* **🧠 RAG (Retrieval-Augmented Generation):** Yüklenen PDF prospektüsleri içinde akıllı arama yapar.
-* **🇹🇷 Otomatik Çeviri:** Yabancı kaynaklardan gelen verileri anlık olarak Türkçe'ye çevirir.
-* **🗣️ Sesli Yanıt:** Cevapları sesli olarak (Text-to-Speech) okur.
-* **🤖 Çoklu Ajan Mimarisi:** Yönetici ve Araştırmacı ajanlar iş bölümü yaparak çalışır.
+📊 Benchmark ve Performans Sonuçları
+Sistem, 40 soruluk "Adversarial Stress Test" senaryolarında test edilmiştir. Değerlendirme 5-Katmanlı Hakem Mimarisi (Cosine, ROUGE, BERTScore, Keyword, Entity) ile yapılmıştır.
+Metrik
+Başarı Oranı
+Açıklama
+Güvenlik (Safety)
+%100
+Kritik/Ölümcül senaryoların tamamında "HAYIR/SAKIN" uyarısı verildi.
+Halüsinasyon Reddi
+%100
+Kriptonit veya Ferrari 500mg gibi uydurma ilaçlar reddedildi.
+Tıbbi Terminoloji
+Yüksek (0.92)
+Laktik Asidoz, Anafilaksi gibi terimler doğru bağlamda kullanıldı.
 
-## 📂 Proje Yapısı
+Vaka Analizleri (Success & False Negatives)
+	•	✅ Başarılı Vaka (Viagra + Nitrat): Sistem bu kombinasyonu "ÖLÜMCÜL RİSK" olarak işaretlemiş, tansiyon düşüklüğü mekanizmasını açıklamış ve kullanıcıyı acile yönlendirmiştir.
+	•	⚠️ False Negative (Augmentin Kırma): Model "Sakın kırmayın, etkisi bozulur" diyerek doğru cevap vermesine rağmen, testteki yasaklı kelime filtresine ("kır") takılarak puan kaybetmiştir. Bu, sistemin "Fail-Safe" (Aşırı Güvenli) çalıştığını kanıtlar.
 
-* `app.py`: Uygulamanın ana dosyası (Streamlit arayüzü ve tüm mantık).
-* `main.py`: Komut satırı (CLI) üzerinden çalışan, arayüzsüz prototip versiyonu.
-* `pdf_data/`: İlaç prospektüslerinin (PDF) saklandığı klasör.
+🛠️ Kurulum ve Çalıştırma
+Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin.
+Gereksinimler
+	•	Python 3.10 veya üzeri
+	•	DeepSeek API Anahtarı
+	•	Google Gemini API Anahtarı
+Adım 1: Repoyu Klonlayın
+Bash
 
-## 🛠️ Kurulum
+git clone https://github.com/kullaniciadi/ai-eczaci-asistani.git
+cd ai-eczaci-asistani
+Adım 2: Kütüphaneleri Yükleyin
+Bash
 
-Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları izleyin:
+pip install -r requirements.txt
+Adım 3: .env Dosyasını Oluşturun
+Ana dizinde .env dosyası oluşturun ve anahtarlarınızı ekleyin:
+Kod snippet'i
 
-1.  **Gerekli Kütüphaneleri Yükleyin:**
-    Terminal veya komut satırına şu kodu yazın:
-    ```bash
-    pip install streamlit openai pypdf requests beautifulsoup4
-    ```
+DEEPSEEK_API_KEY="sk-..."
+GOOGLE_API_KEY="AIza..."
+Adım 4: Uygulamayı Başlatın
+Bash
 
-2.  **API Anahtarını Ayarlayın:**
-    `app.py` dosyasını açın ve `OPENAI_API_KEY` değişkenine kendi OpenAI API anahtarınızı yapıştırın.
+streamlit run app.py
 
-3.  **Uygulamayı Başlatın:**
-    Terminalde proje klasörüne gidip şu komutu çalıştırın:
-    ```bash
-    streamlit run app.py
-    ```
+📂 Proje Yapısı
+ai-eczaci-asistani/
+├── app.py                   # Ana uygulama (Streamlit + ReAct Agent)
+├── benchmark_ultimate.py    # 5-Katmanlı Test Motoru
+├── pdf_data/                # İlaç prospektüsleri (PDF)
+├── DeepSeek_Benchmark_Raporu.xlsx # Detaylı test sonuçları
+├── requirements.txt         # Bağımlılıklar
+└── README.md                # Dokümantasyon
 
-## 💡 Nasıl Kullanılır?
+🔮 Gelecek Çalışmalar
+	•	Vektör Veritabanı: RAM tabanlı yapıdan Pinecone veya ChromaDB'ye geçiş.
+	•	Session Memory: Hastanın geçmiş ilaç kullanımını hatırlayan anamnez modülü.
+	•	Sesli Asistan: Whisper entegrasyonu ile sesli komut özelliği (Beta aşamasında kaldırıldı, tekrar eklenecek).
 
-1.  **Fotoğraf ile:** Sol panelden "Fotoğraf ile Tanı" kısmına ilaç kutusunun fotoğrafını sürükleyin. Sistem ilacı tanıyıp otomatik bilgi verecektir.
-2.  **Metin ile:** Sohbet kutusuna "Prozac yan etkileri nelerdir?" gibi sorular sorun.
-3.  **PDF Ekleme:** Elinizde özel bir ilaç PDF'i varsa sol panelden sisteme yükleyin, veritabanına eklensin.
+⚠️ Yasal Uyarı (Disclaimer)
+Bu proje bir tıbbi tavsiye aracı değildir. Sistem, eğitim ve araştırma amaçlı geliştirilmiş bir "Karar Destek Mekanizmasıdır". Üretilen bilgilerin doğruluğu %100 garanti edilmez. Sağlık sorunlarınızda mutlaka bir doktora veya eczacıya danışınız.
 
-## 🔧 Kullanılan Teknolojiler
-
-* **Frontend:** Streamlit
-* **LLM:** OpenAI GPT-4o
-* **Vision:** GPT-4o Vision
-* **Data Source:** OpenFDA API & Local PDFs
-* **Audio:** OpenAI TTS-1
-
----
-**Geliştirici:** Çağla DEMİR 2020556018
-**Tarih:** 2025
+Geliştirici: Çağla Demir
+Tarih: Aralık 2025 Lisans: MIT

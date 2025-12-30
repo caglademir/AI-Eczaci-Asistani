@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # DeepSeek Anahtarını Buraya (veya .env dosyasına) koy
-DEEPSEEK_API_KEY = "sk-4109a78af41142d2b7a0d89427d0ca97" # Senin Key'in
+DEEPSEEK_API_KEY = "DEEPSEEK_API_KEY" # Senin Key'in
 
 if not DEEPSEEK_API_KEY:
     print("\n❌ HATA: DeepSeek API Key bulunamadı.")

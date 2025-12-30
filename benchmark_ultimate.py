@@ -22,7 +22,7 @@ warnings.filterwarnings("ignore")
 init(autoreset=True)
 
 # DeepSeek API Anahtarı (Buraya kendi keyini yapıştır veya .env'den çek)
-DEEPSEEK_API_KEY = "sk-4109a78af41142d2b7a0d89427d0ca97" 
+DEEPSEEK_API_KEY = "DEEPSEEK_API_KEY" 
 
 if not DEEPSEEK_API_KEY:
     print(f"{Fore.RED}⚠️ HATA: API Key bulunamadı.{Style.RESET_ALL}")
