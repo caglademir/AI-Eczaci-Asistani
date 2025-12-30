@@ -8,7 +8,7 @@
 
 > **"Güvenli, Denetlenebilir ve Hibrit Mimarili İlaç Danışmanlık Sistemi"**
 
-[cite_start]Bu proje, sağlık danışmanlığı alanında Büyük Dil Modellerinin (LLM) güvenli kullanımını sağlamak amacıyla geliştirilmiş bir **Karar Destek Sistemidir (CDSS)**[cite: 99, 103]. [cite_start]Standart RAG yapılarının ötesine geçerek, **Custom ReAct** mimarisi, **Multimodal Görsel Analiz** ve **Deterministik Güvenlik Protokolleri** ile halüsinasyon riskini minimize eder[cite: 97, 107, 110].
+Bu proje, sağlık danışmanlığı alanında Büyük Dil Modellerinin (LLM) güvenli kullanımını sağlamak amacıyla geliştirilmiş bir **Karar Destek Sistemidir (CDSS)**. Standart RAG yapılarının ötesine geçerek, **Custom ReAct** mimarisi, **Multimodal Görsel Analiz** ve **Deterministik Güvenlik Protokolleri** ile halüsinasyon riskini minimize eder.
 
 ---
 
